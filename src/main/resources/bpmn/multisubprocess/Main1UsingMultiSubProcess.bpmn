@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0z8edmg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
+  <bpmn:process id="main1" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1gn4p4b</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_16zbvlu">
+      <bpmn:incoming>Flow_05u75oh</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_04dds3a" sourceRef="Activity_19pszfd" targetRef="Activity_0yh6319" />
+    <bpmn:sequenceFlow id="Flow_05qatdg" sourceRef="Activity_1uv7oqa" targetRef="Activity_19pszfd" />
+    <bpmn:serviceTask id="Activity_1uv7oqa" name="Calculate persons" camunda:expression="${personManagementSpring.calculatePersons(execution)}" camunda:resultVariable="persons">
+      <bpmn:incoming>Flow_1gn4p4b</bpmn:incoming>
+      <bpmn:outgoing>Flow_05qatdg</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_05u75oh" sourceRef="Activity_03de9qg" targetRef="Event_16zbvlu" />
+    <bpmn:serviceTask id="Activity_03de9qg" name="Calculate aggregate result" camunda:expression="${execution.setVariable(&#39;test&#39;, &#39;foo1&#39;)}">
+      <bpmn:incoming>Flow_0vdsvyq</bpmn:incoming>
+      <bpmn:outgoing>Flow_05u75oh</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:callActivity id="Activity_19pszfd" name="Multiple Sub1 per person" calledElement="sub1">
+      <bpmn:extensionElements>
+        <camunda:in source="person" target="person" />
+        <camunda:out source="SUB1_RESULT" target="sub1Result" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_05qatdg</bpmn:incoming>
+      <bpmn:outgoing>Flow_04dds3a</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="persons" camunda:elementVariable="person" />
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_1gn4p4b" sourceRef="StartEvent_1" targetRef="Activity_1uv7oqa" />
+    <bpmn:sequenceFlow id="Flow_0vdsvyq" sourceRef="Activity_0yh6319" targetRef="Activity_03de9qg" />
+    <bpmn:userTask id="Activity_0yh6319" name="Just Wait">
+      <bpmn:incoming>Flow_04dds3a</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vdsvyq</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="main1">
+      <bpmndi:BPMNEdge id="Flow_04dds3a_di" bpmnElement="Flow_04dds3a">
+        <di:waypoint x="870" y="110" />
+        <di:waypoint x="970" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05qatdg_di" bpmnElement="Flow_05qatdg">
+        <di:waypoint x="680" y="110" />
+        <di:waypoint x="770" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05u75oh_di" bpmnElement="Flow_05u75oh">
+        <di:waypoint x="1290" y="110" />
+        <di:waypoint x="1422" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gn4p4b_di" bpmnElement="Flow_1gn4p4b">
+        <di:waypoint x="215" y="97" />
+        <di:waypoint x="398" y="97" />
+        <di:waypoint x="398" y="110" />
+        <di:waypoint x="580" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vdsvyq_di" bpmnElement="Flow_0vdsvyq">
+        <di:waypoint x="1070" y="110" />
+        <di:waypoint x="1190" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zp0inr_di" bpmnElement="Activity_19pszfd">
+        <dc:Bounds x="770" y="70" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0y536hu_di" bpmnElement="Activity_1uv7oqa">
+        <dc:Bounds x="580" y="70" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_16zbvlu_di" bpmnElement="Event_16zbvlu">
+        <dc:Bounds x="1422" y="92" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_15ua2am_di" bpmnElement="Activity_03de9qg">
+        <dc:Bounds x="1190" y="70" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1n9m1r0_di" bpmnElement="Activity_0yh6319">
+        <dc:Bounds x="970" y="70" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

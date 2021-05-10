@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1n5em8m" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1n5em8m" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
   <bpmn:process id="sub1" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_0zxcc1q</bpmn:outgoing>
@@ -10,6 +10,11 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_12edlaa" sourceRef="utSub1" targetRef="Event_186nic4" />
     <bpmn:userTask id="utSub1" name="Task: Sub1 (${person})">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="SUB1_RESULT" label="SUB1_RESULT" type="string" defaultValue="${person.name}" />
+        </camunda:formData>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0zxcc1q</bpmn:incoming>
       <bpmn:outgoing>Flow_12edlaa</bpmn:outgoing>
     </bpmn:userTask>
@@ -26,19 +31,13 @@ SUB1_RESULT</bpmn:text>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="sub1">
-      <bpmndi:BPMNShape id="TextAnnotation_1kjpkqp_di" bpmnElement="TextAnnotation_1kjpkqp">
-        <dc:Bounds x="147" y="80" width="100" height="39" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_0r1xrd1_di" bpmnElement="TextAnnotation_0r1xrd1">
-        <dc:Bounds x="570" y="90" width="100" height="39" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0zxcc1q_di" bpmnElement="Flow_0zxcc1q">
-        <di:waypoint x="215" y="197" />
-        <di:waypoint x="270" y="197" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_12edlaa_di" bpmnElement="Flow_12edlaa">
         <di:waypoint x="370" y="197" />
         <di:waypoint x="562" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zxcc1q_di" bpmnElement="Flow_0zxcc1q">
+        <di:waypoint x="215" y="197" />
+        <di:waypoint x="270" y="197" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="179" width="36" height="36" />
@@ -48,6 +47,12 @@ SUB1_RESULT</bpmn:text>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0idas7k_di" bpmnElement="utSub1">
         <dc:Bounds x="270" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1kjpkqp_di" bpmnElement="TextAnnotation_1kjpkqp">
+        <dc:Bounds x="147" y="80" width="100" height="39" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0r1xrd1_di" bpmnElement="TextAnnotation_0r1xrd1">
+        <dc:Bounds x="570" y="90" width="100" height="39" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_1gaspiz_di" bpmnElement="Association_1gaspiz">
         <di:waypoint x="197" y="179" />

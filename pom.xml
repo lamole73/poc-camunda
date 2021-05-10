@@ -7,6 +7,7 @@
 
     <properties>
         <camunda.version>7.13.0</camunda.version>
+        <camunda-spin.version>1.10.0</camunda-spin.version>
         <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -32,10 +33,19 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- Camunda / spring boot starter -->
         <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
         </dependency>
+
+        <!-- Camunda spin -->
+        <dependency>
+            <groupId>org.camunda.spin</groupId>
+            <artifactId>camunda-spin-dataformat-json-jackson</artifactId>
+            <version>${camunda-spin.version}</version>
+        </dependency>
+
         <!-- Expose camunda REST api on /engine-rest -->
         <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>

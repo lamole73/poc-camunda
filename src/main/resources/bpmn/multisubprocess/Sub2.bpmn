@@ -9,7 +9,7 @@
       <bpmn:incoming>Flow_0nr9i65</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_12edlaa" sourceRef="utSub2" targetRef="gw_fpc_or_not" />
-    <bpmn:userTask id="utSub2" name="Task: Sub2 (${person})">
+    <bpmn:userTask id="utSub2" name="Task: Sub2 Group${group} (${person.perid})">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="SUB_RESULT" label="SUB_RESULT" type="string" defaultValue="${person.name}" />
@@ -35,7 +35,8 @@
     </bpmn:endEvent>
     <bpmn:textAnnotation id="TextAnnotation_1kjpkqp">
       <bpmn:text>Input Params:
-person</bpmn:text>
+person
+group</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1gaspiz" sourceRef="StartEvent_1" targetRef="TextAnnotation_1kjpkqp" />
     <bpmn:textAnnotation id="TextAnnotation_0r1xrd1">
@@ -98,14 +99,14 @@ SUB_RESULT</bpmn:text>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_1kjpkqp_di" bpmnElement="TextAnnotation_1kjpkqp">
-        <dc:Bounds x="147" y="80" width="100" height="39" />
+        <dc:Bounds x="147" y="80" width="100" height="53" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_0r1xrd1_di" bpmnElement="TextAnnotation_0r1xrd1">
         <dc:Bounds x="570" y="90" width="100" height="39" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_1gaspiz_di" bpmnElement="Association_1gaspiz">
         <di:waypoint x="197" y="179" />
-        <di:waypoint x="197" y="119" />
+        <di:waypoint x="197" y="133" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_1qj6xtf_di" bpmnElement="Association_1qj6xtf">
         <di:waypoint x="579" y="181" />

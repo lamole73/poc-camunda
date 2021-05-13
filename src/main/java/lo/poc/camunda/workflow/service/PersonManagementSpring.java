@@ -37,15 +37,15 @@ public class PersonManagementSpring {
      * </pre>
      *
      * @param execution  the execution
-     * @param subProcess the subprocess identifier, i.e. "1" or "2"
+     * @param group the group identifier, i.e. "1" or "2"
      * @return the list of persons
      */
-    public List<Person> calculatePersons(DelegateExecution execution, String subProcess) {
+    public List<Person> calculatePersons(DelegateExecution execution, String group) {
         int elements = 2;
         List<Person> persons = IntStream.range(0, elements)
-                .mapToObj(i -> Person.builder().perid("Sub" + subProcess + "_" + (100 + i)).name("Name_Sub" + subProcess + "_" + (100 + i)).build())
+                .mapToObj(i -> Person.builder().perid("G" + group + "_" + (100 + i)).name("Name_G" + group + "_" + (100 + i)).build())
                 .collect(Collectors.toList());
-        log.info("SubProcess {}: Calculated persons, persons {}", subProcess, persons);
+        log.info("Group {}: Calculated persons, persons {}", group, persons);
         return persons;
     }
 
@@ -57,17 +57,17 @@ public class PersonManagementSpring {
      *
      * @param execution  the execution
      * @param persons    the list of persons so that we initialize the relevant list of results
-     * @param subProcess the subprocess identifier, i.e. "1" or "2"
+     * @param group the group identifier, i.e. "1" or "2"
      */
-    public void initializeResults(DelegateExecution execution, List<Person> persons, String subProcess) {
+    public void initializeResults(DelegateExecution execution, List<Person> persons, String group) {
         List<String> results = persons.stream().map(s -> "").collect(Collectors.toList());
         Map<String, List<String>> resVariable = (Map<String, List<String>>) execution.getVariable(Variable.SUBPROCESS_RESULTS);
         if (null == resVariable) {
             resVariable = new HashMap<>();
             execution.setVariable(Variable.SUBPROCESS_RESULTS, resVariable);
         }
-        resVariable.put(subProcess, results);
-        log.info("SubProcess {}: Initialized person results, put on variable {} empty results {}", subProcess, Variable.SUBPROCESS_RESULTS, resVariable);
+        resVariable.put(group, results);
+        log.info("Group {}: Initialized person results, put on variable {} empty results {}", group, Variable.SUBPROCESS_RESULTS, resVariable);
     }
 
     /**
@@ -77,24 +77,24 @@ public class PersonManagementSpring {
      * </pre>
      *
      * @param execution  the execution
-     * @param subProcess the subprocess identifier, i.e. "1" or "2"
+     * @param group the group identifier, i.e. "1" or "2"
      */
-    public void collectResults(DelegateExecution execution, String subProcess) {
-        log.info("SubProcess {}: Debuging... id={}, processInstanceId={}, activityInstanceId={}", subProcess, execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
-        log.info("SubProcess {}: Debuging... parentId={}, parentActivityInstanceId={}", subProcess, execution.getParentId(), execution.getParentActivityInstanceId());
+    public void collectResults(DelegateExecution execution, String group) {
+        log.info("Group {}: Debuging... id={}, processInstanceId={}, activityInstanceId={}", group, execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
+        log.info("Group {}: Debuging... parentId={}, parentActivityInstanceId={}", group, execution.getParentId(), execution.getParentActivityInstanceId());
         Integer loopCounter = (Integer) execution.getVariable("loopCounter");
         Map<String, List<String>> resVariable = (Map<String, List<String>>) execution.getVariable(Variable.SUBPROCESS_RESULTS);
-        List<String> results = resVariable.get(subProcess);
-        log.info("SubProcess {}: Collecting result of task with index {}, current results on execution is {}", subProcess, loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS));
-        String currentResult = (String) execution.getVariableLocal("sub1Result");
-        log.info("SubProcess {}: Result for task with index {}, currentResult {}", subProcess, loopCounter, currentResult);
+        List<String> results = resVariable.get(group);
+        log.info("Group {}: Collecting result of task with index {}, current results on execution is {}", group, loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS));
+        String currentResult = (String) execution.getVariableLocal("subResult");
+        log.info("Group {}: Result for task with index {}, currentResult {}", group, loopCounter, currentResult);
         if (null != currentResult) {
             // Only set if completed, not when it is destroyed
-            log.info("SubProcess {}: SET Result for task with index {}, currentResult {}", subProcess, loopCounter, currentResult);
+            log.info("Group {}: SET Result for task with index {}, currentResult {}", group, loopCounter, currentResult);
             results.set(loopCounter, currentResult);
         }
 
-        log.info("SubProcess {}: After setting result for task with index {}, results on execution is {}", subProcess, loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS));
+        log.info("Group {}: After setting result for task with index {}, results on execution is {}", group, loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS));
     }
 
     /**
@@ -104,19 +104,22 @@ public class PersonManagementSpring {
      * </pre>
      *
      * @param execution  the execution
-     * @param subProcess the subprocess identifier, i.e. "1" or "2"
+     * @param group the group identifier, i.e. "1" or "2"
      */
-    public boolean completionCondition(DelegateExecution execution, String subProcess) {
-        // We disregard subProcess, both should complete
-        log.info("SubProcess {}: Debuging... id={}, processInstanceId={}, activityInstanceId={}", subProcess, execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
-        log.info("SubProcess {}: Debuging... parentId={}, parentActivityInstanceId={}", subProcess, execution.getParentId(), execution.getParentActivityInstanceId());
+    public boolean completionCondition(DelegateExecution execution, String group) {
+        // We disregard group, both should complete
+        log.info("Group {}: Debuging... id={}, processInstanceId={}, activityInstanceId={}", group, execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
+        log.info("Group {}: Debuging... parentId={}, parentActivityInstanceId={}", group, execution.getParentId(), execution.getParentActivityInstanceId());
         Map<String, List<String>> resVariable = (Map<String, List<String>>) execution.getVariable(Variable.SUBPROCESS_RESULTS);
-        log.info("SubProcess {}: Current results on execution is {}", subProcess, execution.getVariable(Variable.SUBPROCESS_RESULTS));
-        List<String> allResults = resVariable.entrySet().stream().flatMap(e -> e.getValue().stream()).collect(Collectors.toList());
-        log.info("SubProcess {}: Flattened all results is {}", subProcess, allResults);
+        log.info("Group {}: Current results on execution is {}", group, execution.getVariable(Variable.SUBPROCESS_RESULTS));
+        // To take into account both groups of multiinstance sub process results
+//        List<String> results = resVariable.entrySet().stream().flatMap(e -> e.getValue().stream()).collect(Collectors.toList());
+        // To take into account only the current group group of multiinstance sub process results
+        List<String> results = resVariable.get(group);
+        log.info("Group {}: Flattened all results is {}", group, results);
 
-        boolean foundFPC = allResults.stream().anyMatch(o -> "FPC".equals(o));
-        log.info("SubProcess {}: foundFPC is {}", subProcess, foundFPC);
+        boolean foundFPC = results.stream().anyMatch(o -> "FPC".equals(o));
+        log.info("Group {}: foundFPC is {}", group, foundFPC);
         return foundFPC;
     }
 

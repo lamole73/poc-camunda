@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0z8edmg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
   <bpmn:process id="main1" name="Main1UsingMultiSubProcessProcessVariables" isExecutable="true">
-    <bpmn:extensionElements>
-      <camunda:executionListener expression="" event="end" />
-    </bpmn:extensionElements>
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_0qrx44b</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:endEvent id="Event_16zbvlu">
       <bpmn:incoming>Flow_05u75oh</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:serviceTask id="Activity_1uv7oqa" name="Calculate persons Sub1" camunda:expression="${personManagementSpring.calculatePersons(execution, &#34;1&#34;)}" camunda:resultVariable="persons">
+    <bpmn:serviceTask id="Activity_1uv7oqa" name="Calculate persons Group1" camunda:expression="${personManagementSpring.calculatePersons(execution, &#34;1&#34;)}" camunda:resultVariable="persons">
       <bpmn:incoming>Flow_1ukhyc8</bpmn:incoming>
       <bpmn:outgoing>Flow_1wj3lrx</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -19,11 +16,12 @@
       <bpmn:incoming>Flow_0vdsvyq</bpmn:incoming>
       <bpmn:outgoing>Flow_05u75oh</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:callActivity id="Activity_19pszfd" name="Multiple Sub1 per person" calledElement="sub1">
+    <bpmn:callActivity id="Activity_19pszfd" name="Multiple Sub1 Group1 per person" calledElement="sub1">
       <bpmn:extensionElements>
         <camunda:in source="person" target="person" />
-        <camunda:out source="SUB1_RESULT" target="sub1Result" local="true" />
+        <camunda:out source="SUB_RESULT" target="subResult" local="true" />
         <camunda:executionListener expression="${personManagementSpring.collectResults(execution, &#34;1&#34;)}" event="end" />
+        <camunda:in sourceExpression="1" target="group" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_056u0vl</bpmn:incoming>
       <bpmn:outgoing>Flow_04dds3a</bpmn:outgoing>
@@ -32,20 +30,21 @@
       </bpmn:multiInstanceLoopCharacteristics>
     </bpmn:callActivity>
     <bpmn:sequenceFlow id="Flow_0vdsvyq" sourceRef="Activity_0yh6319" targetRef="Activity_03de9qg" />
-    <bpmn:userTask id="Activity_0yh6319" name="Just Wait">
+    <bpmn:userTask id="Activity_0yh6319" name="Main1 Just Wait">
       <bpmn:incoming>Flow_0f0xdza</bpmn:incoming>
       <bpmn:outgoing>Flow_0vdsvyq</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="Activity_12g6b58" name="Initialize Results Sub1" camunda:expression="${personManagementSpring.initializeResults(execution, persons, &#34;1&#34;)}">
+    <bpmn:serviceTask id="Activity_12g6b58" name="Initialize Results Group1" camunda:expression="${personManagementSpring.initializeResults(execution, persons, &#34;1&#34;)}">
       <bpmn:incoming>Flow_1wj3lrx</bpmn:incoming>
       <bpmn:outgoing>Flow_056u0vl</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_04dds3a" sourceRef="Activity_19pszfd" targetRef="Gateway_1r9paxe" />
-    <bpmn:callActivity id="Activity_0y04w9r" name="Multiple Sub2 per person" calledElement="sub1">
+    <bpmn:callActivity id="Activity_0y04w9r" name="Multiple Sub1 Group2 per person" calledElement="sub1">
       <bpmn:extensionElements>
         <camunda:in source="person" target="person" />
-        <camunda:out source="SUB1_RESULT" target="sub1Result" local="true" />
+        <camunda:out source="SUB_RESULT" target="subResult" local="true" />
         <camunda:executionListener expression="${personManagementSpring.collectResults(execution, &#34;2&#34;)}" event="end" />
+        <camunda:in sourceExpression="2" target="group" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0t2aj96</bpmn:incoming>
       <bpmn:outgoing>Flow_0d8zc86</bpmn:outgoing>
@@ -65,12 +64,12 @@
     <bpmn:sequenceFlow id="Flow_056u0vl" sourceRef="Activity_12g6b58" targetRef="Activity_19pszfd" />
     <bpmn:sequenceFlow id="Flow_1wj3lrx" sourceRef="Activity_1uv7oqa" targetRef="Activity_12g6b58" />
     <bpmn:sequenceFlow id="Flow_0qrx44b" sourceRef="StartEvent_1" targetRef="Gateway_054u03v" />
-    <bpmn:serviceTask id="Activity_05xst7s" name="Calculate persons Sub2" camunda:expression="${personManagementSpring.calculatePersons(execution, &#34;2&#34;)}" camunda:resultVariable="persons">
+    <bpmn:serviceTask id="Activity_05xst7s" name="Calculate persons Group2" camunda:expression="${personManagementSpring.calculatePersons(execution, &#34;2&#34;)}" camunda:resultVariable="persons">
       <bpmn:incoming>Flow_097gq13</bpmn:incoming>
       <bpmn:outgoing>Flow_0319006</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_0319006" sourceRef="Activity_05xst7s" targetRef="Activity_02483g4" />
-    <bpmn:serviceTask id="Activity_02483g4" name="Initialize Results Sub2" camunda:expression="${personManagementSpring.initializeResults(execution, persons, &#34;2&#34;)}">
+    <bpmn:serviceTask id="Activity_02483g4" name="Initialize Results Group2" camunda:expression="${personManagementSpring.initializeResults(execution, persons, &#34;2&#34;)}">
       <bpmn:incoming>Flow_0319006</bpmn:incoming>
       <bpmn:outgoing>Flow_0t2aj96</bpmn:outgoing>
     </bpmn:serviceTask>

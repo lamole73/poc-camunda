@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
@@ -28,43 +30,116 @@ public class PersonManagementSpring {
     private final @Lazy
     RuntimeService runtimeService;
 
+    /**
+     * Calculates the list of persons to be used for multiinstance subprocess call activity
+     * <pre>
+     *     This is trigger by the main process prior to multiinstance subprocess
+     * </pre>
+     *
+     * @param execution  the execution
+     * @param subProcess the subprocess identifier, i.e. "1" or "2"
+     * @return the list of persons
+     */
     public List<Person> calculatePersons(DelegateExecution execution, String subProcess) {
-        int elements = 4;
+        int elements = 2;
         List<Person> persons = IntStream.range(0, elements)
-                .mapToObj(i->Person.builder().perid("Sub"+subProcess+"_"+(100+i)).name("Name_Sub"+subProcess+"_"+(100+i)).build())
+                .mapToObj(i -> Person.builder().perid("Sub" + subProcess + "_" + (100 + i)).name("Name_Sub" + subProcess + "_" + (100 + i)).build())
                 .collect(Collectors.toList());
         log.info("SubProcess {}: Calculated persons, persons {}", subProcess, persons);
         return persons;
     }
 
+    /**
+     * Initialize the Map of results per subprocess identifier and adds as a process variable {@value Variable#SUBPROCESS_RESULTS}
+     * <pre>
+     *     This is trigger by the main process prior to multiinstance subprocess
+     * </pre>
+     *
+     * @param execution  the execution
+     * @param persons    the list of persons so that we initialize the relevant list of results
+     * @param subProcess the subprocess identifier, i.e. "1" or "2"
+     */
     public void initializeResults(DelegateExecution execution, List<Person> persons, String subProcess) {
-        List<Object> results = persons.stream().map(s->null).collect(Collectors.toList());
-        execution.setVariable(Variable.SUBPROCESS_RESULTS+subProcess, results);
-        log.info("SubProcess {}: Initialized person results, put on variable {} empty results {}", subProcess, Variable.SUBPROCESS_RESULTS+subProcess, results);
+        List<String> results = persons.stream().map(s -> "").collect(Collectors.toList());
+        Map<String, List<String>> resVariable = (Map<String, List<String>>) execution.getVariable(Variable.SUBPROCESS_RESULTS);
+        if (null == resVariable) {
+            resVariable = new HashMap<>();
+            execution.setVariable(Variable.SUBPROCESS_RESULTS, resVariable);
+        }
+        resVariable.put(subProcess, results);
+        log.info("SubProcess {}: Initialized person results, put on variable {} empty results {}", subProcess, Variable.SUBPROCESS_RESULTS, resVariable);
     }
 
+    /**
+     * Collect the result of a single index (identified by "loopCounter") and put it on results process variable {@value Variable#SUBPROCESS_RESULTS}
+     * <pre>
+     *     This is triggered by the "end" listener of the multiinstance subprocess
+     * </pre>
+     *
+     * @param execution  the execution
+     * @param subProcess the subprocess identifier, i.e. "1" or "2"
+     */
     public void collectResults(DelegateExecution execution, String subProcess) {
         log.info("SubProcess {}: Debuging... id={}, processInstanceId={}, activityInstanceId={}", subProcess, execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
         log.info("SubProcess {}: Debuging... parentId={}, parentActivityInstanceId={}", subProcess, execution.getParentId(), execution.getParentActivityInstanceId());
         Integer loopCounter = (Integer) execution.getVariable("loopCounter");
-        List<Object> results = (List<Object>) execution.getVariable(Variable.SUBPROCESS_RESULTS+subProcess);
-        log.info("SubProcess {}: Collecting result of task with index {}, current results on execution is {}", subProcess, loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS+subProcess));
+        Map<String, List<String>> resVariable = (Map<String, List<String>>) execution.getVariable(Variable.SUBPROCESS_RESULTS);
+        List<String> results = resVariable.get(subProcess);
+        log.info("SubProcess {}: Collecting result of task with index {}, current results on execution is {}", subProcess, loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS));
         String currentResult = (String) execution.getVariableLocal("sub1Result");
         log.info("SubProcess {}: Result for task with index {}, currentResult {}", subProcess, loopCounter, currentResult);
-        results.set(loopCounter, currentResult);
+        if (null != currentResult) {
+            // Only set if completed, not when it is destroyed
+            log.info("SubProcess {}: SET Result for task with index {}, currentResult {}", subProcess, loopCounter, currentResult);
+            results.set(loopCounter, currentResult);
+        }
 
-        log.info("SubProcess {}: After setting result for task with index {}, results on execution is {}", subProcess, loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS+subProcess));
+        log.info("SubProcess {}: After setting result for task with index {}, results on execution is {}", subProcess, loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS));
     }
 
+    /**
+     * Collect the result of a single index (identified by "loopCounter") and put it on results process variable {@value Variable#SUBPROCESS_RESULTS}
+     * <pre>
+     *     This is triggered by the "end" listener of the multiinstance subprocess
+     * </pre>
+     *
+     * @param execution  the execution
+     * @param subProcess the subprocess identifier, i.e. "1" or "2"
+     */
     public boolean completionCondition(DelegateExecution execution, String subProcess) {
+        // We disregard subProcess, both should complete
         log.info("SubProcess {}: Debuging... id={}, processInstanceId={}, activityInstanceId={}", subProcess, execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
         log.info("SubProcess {}: Debuging... parentId={}, parentActivityInstanceId={}", subProcess, execution.getParentId(), execution.getParentActivityInstanceId());
-        List<Object> results = (List<Object>) execution.getVariable(Variable.SUBPROCESS_RESULTS+subProcess);
-        log.info("SubProcess {}: Current results on execution is {}", subProcess, execution.getVariable(Variable.SUBPROCESS_RESULTS+subProcess));
+        Map<String, List<String>> resVariable = (Map<String, List<String>>) execution.getVariable(Variable.SUBPROCESS_RESULTS);
+        log.info("SubProcess {}: Current results on execution is {}", subProcess, execution.getVariable(Variable.SUBPROCESS_RESULTS));
+        List<String> allResults = resVariable.entrySet().stream().flatMap(e -> e.getValue().stream()).collect(Collectors.toList());
+        log.info("SubProcess {}: Flattened all results is {}", subProcess, allResults);
 
-        boolean foundFPC = results.stream().anyMatch(o -> "FPC".equals(o));
+        boolean foundFPC = allResults.stream().anyMatch(o -> "FPC".equals(o));
         log.info("SubProcess {}: foundFPC is {}", subProcess, foundFPC);
         return foundFPC;
+    }
+
+    /**
+     * Calculate the aggregate of the results from the process variable {@value Variable#SUBPROCESS_RESULTS}
+     * <pre>
+     *     This is trigger by the main process after both multiinstance subprocess finish
+     * </pre>
+     *
+     * @param execution the execution
+     */
+    public String calculateFinalAggregateResult(DelegateExecution execution) {
+        // We disregard subProcess, both should complete
+        log.info("Debuging... id={}, processInstanceId={}, activityInstanceId={}", execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
+        log.info("Debuging... parentId={}, parentActivityInstanceId={}", execution.getParentId(), execution.getParentActivityInstanceId());
+        Map<String, List<String>> resVariable = (Map<String, List<String>>) execution.getVariable(Variable.SUBPROCESS_RESULTS);
+        log.info("Current final results on execution is {}", execution.getVariable(Variable.SUBPROCESS_RESULTS));
+        List<String> allResults = resVariable.entrySet().stream().flatMap(e -> e.getValue().stream()).collect(Collectors.toList());
+        log.info("Flattened final results is {}", allResults);
+
+        String aggregate = allResults.stream().filter(o -> "FPC".equals(o)).findAny().orElse("OK");
+        log.info("Final Aggregate is {}", aggregate);
+        return aggregate;
     }
 
     @Data

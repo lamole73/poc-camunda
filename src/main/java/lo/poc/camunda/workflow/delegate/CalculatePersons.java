@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Sample of a Java Delegate, currently NOT used
+ */
 @Slf4j
 @Component
 public class CalculatePersons implements JavaDelegate {

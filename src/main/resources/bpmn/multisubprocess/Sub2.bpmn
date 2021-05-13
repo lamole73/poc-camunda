@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1n5em8m" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
+  <bpmn:process id="sub2" name="SubProcess2" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0zxcc1q</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0zxcc1q" sourceRef="StartEvent_1" targetRef="utSub2" />
+    <bpmn:endEvent id="end_ok" name="OK">
+      <bpmn:incoming>Flow_0nr9i65</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_12edlaa" sourceRef="utSub2" targetRef="gw_fpc_or_not" />
+    <bpmn:userTask id="utSub2" name="Task: Sub2 (${person})">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="SUB_RESULT" label="SUB_RESULT" type="string" defaultValue="${person.name}" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0zxcc1q</bpmn:incoming>
+      <bpmn:outgoing>Flow_12edlaa</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="gw_fpc_or_not">
+      <bpmn:incoming>Flow_12edlaa</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nr9i65</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0kojviq</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0nr9i65" name="Other" sourceRef="gw_fpc_or_not" targetRef="end_ok">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${SUB_RESULT != "FPC"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0kojviq" name="FPC" sourceRef="gw_fpc_or_not" targetRef="esc_FPC">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${SUB_RESULT == "FPC"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="esc_FPC" name="FPC&#10;">
+      <bpmn:incoming>Flow_0kojviq</bpmn:incoming>
+      <bpmn:escalationEventDefinition id="EscalationEventDefinition_1galxzv" escalationRef="Escalation_1n9vk3f" />
+    </bpmn:endEvent>
+    <bpmn:textAnnotation id="TextAnnotation_1kjpkqp">
+      <bpmn:text>Input Params:
+person</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1gaspiz" sourceRef="StartEvent_1" targetRef="TextAnnotation_1kjpkqp" />
+    <bpmn:textAnnotation id="TextAnnotation_0r1xrd1">
+      <bpmn:text>Output params:
+SUB_RESULT</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1qj6xtf" sourceRef="end_ok" targetRef="TextAnnotation_0r1xrd1" />
+    <bpmn:association id="Association_0euw32v" sourceRef="esc_FPC" targetRef="TextAnnotation_0r1xrd1" />
+  </bpmn:process>
+  <bpmn:message id="Message_1dpmnud" name="event_FPC" />
+  <bpmn:escalation id="Escalation_1u728mp" name="Escalation_29ab696" />
+  <bpmn:error id="Error_1335kz0" name="Error_3f7i43c" />
+  <bpmn:error id="Error_1g2vgg5" name="Error_203bhds" />
+  <bpmn:error id="Error_0dzvo8g" name="Error_0h6k8qm" />
+  <bpmn:escalation id="Escalation_1n9vk3f" name="esc_fpc_name" escalationCode="esc_fpc" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="sub2">
+      <bpmndi:BPMNEdge id="Flow_0kojviq_di" bpmnElement="Flow_0kojviq">
+        <di:waypoint x="460" y="222" />
+        <di:waypoint x="460" y="270" />
+        <di:waypoint x="602" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="492" y="253" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nr9i65_di" bpmnElement="Flow_0nr9i65">
+        <di:waypoint x="485" y="197" />
+        <di:waypoint x="552" y="197" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="504" y="179" width="29" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12edlaa_di" bpmnElement="Flow_12edlaa">
+        <di:waypoint x="370" y="197" />
+        <di:waypoint x="435" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zxcc1q_di" bpmnElement="Flow_0zxcc1q">
+        <di:waypoint x="215" y="197" />
+        <di:waypoint x="270" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="179" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0idas7k_di" bpmnElement="utSub2">
+        <dc:Bounds x="270" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1la0w90_di" bpmnElement="gw_fpc_or_not" isMarkerVisible="true">
+        <dc:Bounds x="435" y="172" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1kjpkqp_di" bpmnElement="TextAnnotation_1kjpkqp">
+        <dc:Bounds x="147" y="80" width="100" height="39" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0r1xrd1_di" bpmnElement="TextAnnotation_0r1xrd1">
+        <dc:Bounds x="570" y="90" width="100" height="39" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1sz571c_di" bpmnElement="esc_FPC">
+        <dc:Bounds x="602" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="609" y="295" width="23" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_186nic4_di" bpmnElement="end_ok">
+        <dc:Bounds x="552" y="179" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="562" y="222" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1gaspiz_di" bpmnElement="Association_1gaspiz">
+        <di:waypoint x="197" y="179" />
+        <di:waypoint x="197" y="119" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0euw32v_di" bpmnElement="Association_0euw32v">
+        <di:waypoint x="621" y="252" />
+        <di:waypoint x="629" y="129" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1qj6xtf_di" bpmnElement="Association_1qj6xtf">
+        <di:waypoint x="579" y="181" />
+        <di:waypoint x="608" y="129" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

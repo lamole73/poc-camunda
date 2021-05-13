@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0z8edmg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
-  <bpmn:process id="main2" name="Main2UsingMultiSubProcessNoVariables" isExecutable="true">
+  <bpmn:process id="main2" name="Main2UsingMultiSubProcessEscalation" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_0qrx44b</bpmn:outgoing>
     </bpmn:startEvent>
@@ -94,12 +94,14 @@ In addition when one of the escalation for FPC is received from one of the subpr
   <bpmn:escalation id="Escalation_03twdk4" name="esc_fpc_name" escalationCode="esc_fpc" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="main2">
-      <bpmndi:BPMNShape id="TextAnnotation_0ixhcft_di" bpmnElement="TextAnnotation_0ixhcft">
-        <dc:Bounds x="1170" y="140" width="160" height="53" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_12a7mck_di" bpmnElement="TextAnnotation_12a7mck">
-        <dc:Bounds x="160" y="80" width="340" height="125" />
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0l81y8h_di" bpmnElement="Flow_0l81y8h">
+        <di:waypoint x="1140" y="410" />
+        <di:waypoint x="1212" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17bqtjq_di" bpmnElement="Flow_17bqtjq">
+        <di:waypoint x="930" y="210" />
+        <di:waypoint x="1052" y="210" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0xl5jp9_di" bpmnElement="Flow_0xl5jp9">
         <di:waypoint x="798" y="490" />
         <di:waypoint x="880" y="490" />
@@ -110,9 +112,17 @@ In addition when one of the escalation for FPC is received from one of the subpr
         <di:waypoint x="780" y="210" />
         <di:waypoint x="830" y="210" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0319006_di" bpmnElement="Flow_0319006">
+        <di:waypoint x="540" y="540" />
+        <di:waypoint x="680" y="540" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0qrx44b_di" bpmnElement="Flow_0qrx44b">
         <di:waypoint x="248" y="420" />
         <di:waypoint x="315" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wj3lrx_di" bpmnElement="Flow_1wj3lrx">
+        <di:waypoint x="540" y="290" />
+        <di:waypoint x="680" y="290" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0d8zc86_di" bpmnElement="Flow_0d8zc86">
         <di:waypoint x="780" y="530" />
@@ -138,42 +148,8 @@ In addition when one of the escalation for FPC is received from one of the subpr
         <di:waypoint x="930" y="290" />
         <di:waypoint x="930" y="385" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0319006_di" bpmnElement="Flow_0319006">
-        <di:waypoint x="540" y="540" />
-        <di:waypoint x="680" y="540" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1wj3lrx_di" bpmnElement="Flow_1wj3lrx">
-        <di:waypoint x="540" y="290" />
-        <di:waypoint x="680" y="290" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_17bqtjq_di" bpmnElement="Flow_17bqtjq">
-        <di:waypoint x="930" y="210" />
-        <di:waypoint x="1052" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0l81y8h_di" bpmnElement="Flow_0l81y8h">
-        <di:waypoint x="1140" y="410" />
-        <di:waypoint x="1212" y="410" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Activity_0zp0inr_di" bpmnElement="Activity_19pszfd">
-        <dc:Bounds x="680" y="250" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1bce5tm_di" bpmnElement="Gateway_1r9paxe">
-        <dc:Bounds x="905" y="385" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1xj2qbo_di" bpmnElement="Activity_0fua2fl">
-        <dc:Bounds x="830" y="170" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0y536hu_di" bpmnElement="Activity_1uv7oqa">
-        <dc:Bounds x="440" y="250" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_05xst7s_di" bpmnElement="Activity_05xst7s">
-        <dc:Bounds x="440" y="500" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0y04w9r_di" bpmnElement="Activity_0y04w9r">
-        <dc:Bounds x="680" y="490" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_117khth_di" bpmnElement="Activity_117khth">
-        <dc:Bounds x="1040" y="370" width="100" height="80" />
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="212" y="402" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_16zbvlu_di" bpmnElement="Event_16zbvlu">
         <dc:Bounds x="1212" y="392" width="36" height="36" />
@@ -181,36 +157,60 @@ In addition when one of the escalation for FPC is received from one of the subpr
           <dc:Bounds x="1222" y="435" width="17" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0y536hu_di" bpmnElement="Activity_1uv7oqa">
+        <dc:Bounds x="440" y="250" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zp0inr_di" bpmnElement="Activity_19pszfd">
+        <dc:Bounds x="680" y="250" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0y04w9r_di" bpmnElement="Activity_0y04w9r">
+        <dc:Bounds x="680" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_02mpuqb_di" bpmnElement="Gateway_054u03v">
+        <dc:Bounds x="315" y="395" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05xst7s_di" bpmnElement="Activity_05xst7s">
+        <dc:Bounds x="440" y="500" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1bce5tm_di" bpmnElement="Gateway_1r9paxe">
+        <dc:Bounds x="905" y="385" width="50" height="50" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0yq6olp_di" bpmnElement="end_FPC">
         <dc:Bounds x="1052" y="192" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1048" y="238" width="44" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_02mpuqb_di" bpmnElement="Gateway_054u03v">
-        <dc:Bounds x="315" y="395" width="50" height="50" />
+      <bpmndi:BPMNShape id="Activity_1xj2qbo_di" bpmnElement="Activity_0fua2fl">
+        <dc:Bounds x="830" y="170" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="212" y="402" width="36" height="36" />
+      <bpmndi:BPMNShape id="Activity_117khth_di" bpmnElement="Activity_117khth">
+        <dc:Bounds x="1040" y="370" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0ixhcft_di" bpmnElement="TextAnnotation_0ixhcft">
+        <dc:Bounds x="1170" y="140" width="160" height="53" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_12a7mck_di" bpmnElement="TextAnnotation_12a7mck">
+        <dc:Bounds x="160" y="80" width="340" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0tuf14u_di" bpmnElement="event2_fpc">
+        <dc:Bounds x="762" y="472" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_11qejgh_di" bpmnElement="event1_fpc">
+        <dc:Bounds x="762" y="232" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_0q6hse0_di" bpmnElement="Association_0q6hse0">
         <di:waypoint x="1229" y="392" />
         <di:waypoint x="1221" y="193" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_1w53hlr_di" bpmnElement="Association_1w53hlr">
-        <di:waypoint x="1087" y="205" />
-        <di:waypoint x="1170" y="184" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_1l19jn7_di" bpmnElement="Association_1l19jn7">
         <di:waypoint x="229" y="402" />
         <di:waypoint x="217" y="205" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_11qejgh_di" bpmnElement="event1_fpc">
-        <dc:Bounds x="762" y="232" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0tuf14u_di" bpmnElement="event2_fpc">
-        <dc:Bounds x="762" y="472" width="36" height="36" />
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1w53hlr_di" bpmnElement="Association_1w53hlr">
+        <di:waypoint x="1087" y="205" />
+        <di:waypoint x="1170" y="184" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

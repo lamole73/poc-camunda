@@ -25,47 +25,45 @@ import java.util.stream.StreamSupport;
 @AllArgsConstructor
 public class PersonManagementSpring {
 
-    private static final String MESSAGE_COMPLETE_MULTIINSTANCE="_message_complete_multiinstance_";
-
     private final @Lazy
     RuntimeService runtimeService;
 
-    public List<Person> calculatePersons(DelegateExecution execution) {
+    public List<Person> calculatePersons(DelegateExecution execution, String subProcess) {
         int elements = 4;
         List<Person> persons = IntStream.range(0, elements)
-                .mapToObj(i->Person.builder().perid(""+(100+i)).name("Name"+(100+i)).build())
+                .mapToObj(i->Person.builder().perid("Sub"+subProcess+"_"+(100+i)).name("Name_Sub"+subProcess+"_"+(100+i)).build())
                 .collect(Collectors.toList());
-        log.info("Calculated persons, persons {}", persons);
+        log.info("SubProcess {}: Calculated persons, persons {}", subProcess, persons);
         return persons;
     }
 
-    public void initializeResults(DelegateExecution execution, List<Person> persons) {
+    public void initializeResults(DelegateExecution execution, List<Person> persons, String subProcess) {
         List<Object> results = persons.stream().map(s->null).collect(Collectors.toList());
-        execution.setVariable(Variable.SUBPROCESS_RESULTS, results);
-        log.info("Initialized person results, put on variable {} empty results {}", Variable.SUBPROCESS_RESULTS, results);
+        execution.setVariable(Variable.SUBPROCESS_RESULTS+subProcess, results);
+        log.info("SubProcess {}: Initialized person results, put on variable {} empty results {}", subProcess, Variable.SUBPROCESS_RESULTS+subProcess, results);
     }
 
-    public void collectResults(DelegateExecution execution) {
-        log.info("Debuging... id={}, processInstanceId={}, activityInstanceId={}", execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
-        log.info("Debuging... parentId={}, parentActivityInstanceId={}", execution.getParentId(), execution.getParentActivityInstanceId());
+    public void collectResults(DelegateExecution execution, String subProcess) {
+        log.info("SubProcess {}: Debuging... id={}, processInstanceId={}, activityInstanceId={}", subProcess, execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
+        log.info("SubProcess {}: Debuging... parentId={}, parentActivityInstanceId={}", subProcess, execution.getParentId(), execution.getParentActivityInstanceId());
         Integer loopCounter = (Integer) execution.getVariable("loopCounter");
-        List<Object> results = (List<Object>) execution.getVariable(Variable.SUBPROCESS_RESULTS);
-        log.info("Collecting result of task with index {}, current results on execution is {}", loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS));
+        List<Object> results = (List<Object>) execution.getVariable(Variable.SUBPROCESS_RESULTS+subProcess);
+        log.info("SubProcess {}: Collecting result of task with index {}, current results on execution is {}", subProcess, loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS+subProcess));
         String currentResult = (String) execution.getVariableLocal("sub1Result");
-        log.info("Result for task with index {}, currentResult {}", loopCounter, currentResult);
+        log.info("SubProcess {}: Result for task with index {}, currentResult {}", subProcess, loopCounter, currentResult);
         results.set(loopCounter, currentResult);
 
-        log.info("After setting result for task with index {}, results on execution is {}", loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS));
+        log.info("SubProcess {}: After setting result for task with index {}, results on execution is {}", subProcess, loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS+subProcess));
     }
 
-    public boolean completionCondition(DelegateExecution execution) {
-        log.info("id={}, processInstanceId={}, activityInstanceId={}", execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
-        log.info("parentId={}, parentActivityInstanceId={}", execution.getParentId(), execution.getParentActivityInstanceId());
-        List<Object> results = (List<Object>) execution.getVariable(Variable.SUBPROCESS_RESULTS);
-        log.info("Current results on execution is {}", execution.getVariable(Variable.SUBPROCESS_RESULTS));
+    public boolean completionCondition(DelegateExecution execution, String subProcess) {
+        log.info("SubProcess {}: Debuging... id={}, processInstanceId={}, activityInstanceId={}", subProcess, execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
+        log.info("SubProcess {}: Debuging... parentId={}, parentActivityInstanceId={}", subProcess, execution.getParentId(), execution.getParentActivityInstanceId());
+        List<Object> results = (List<Object>) execution.getVariable(Variable.SUBPROCESS_RESULTS+subProcess);
+        log.info("SubProcess {}: Current results on execution is {}", subProcess, execution.getVariable(Variable.SUBPROCESS_RESULTS+subProcess));
 
         boolean foundFPC = results.stream().anyMatch(o -> "FPC".equals(o));
-        log.info("foundFPC is {}", foundFPC);
+        log.info("SubProcess {}: foundFPC is {}", subProcess, foundFPC);
         return foundFPC;
     }
 

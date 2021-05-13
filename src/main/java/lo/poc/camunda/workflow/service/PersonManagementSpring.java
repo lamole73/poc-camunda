@@ -6,7 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
+import org.camunda.bpm.engine.runtime.Execution;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -20,6 +24,11 @@ import java.util.stream.StreamSupport;
 @Service("personManagementSpring")
 @AllArgsConstructor
 public class PersonManagementSpring {
+
+    private static final String MESSAGE_COMPLETE_MULTIINSTANCE="_message_complete_multiinstance_";
+
+    private final @Lazy
+    RuntimeService runtimeService;
 
     public List<Person> calculatePersons(DelegateExecution execution) {
         int elements = 4;
@@ -36,7 +45,10 @@ public class PersonManagementSpring {
         log.info("Initialized person results, put on variable {} empty results {}", Variable.SUBPROCESS_RESULTS, results);
     }
 
-    public void collectResults(DelegateExecution execution, int loopCounter) {
+    public void collectResults(DelegateExecution execution) {
+        log.info("Debuging... id={}, processInstanceId={}, activityInstanceId={}", execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
+        log.info("Debuging... parentId={}, parentActivityInstanceId={}", execution.getParentId(), execution.getParentActivityInstanceId());
+        Integer loopCounter = (Integer) execution.getVariable("loopCounter");
         List<Object> results = (List<Object>) execution.getVariable(Variable.SUBPROCESS_RESULTS);
         log.info("Collecting result of task with index {}, current results on execution is {}", loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS));
         String currentResult = (String) execution.getVariableLocal("sub1Result");
@@ -44,6 +56,17 @@ public class PersonManagementSpring {
         results.set(loopCounter, currentResult);
 
         log.info("After setting result for task with index {}, results on execution is {}", loopCounter, execution.getVariable(Variable.SUBPROCESS_RESULTS));
+    }
+
+    public boolean completionCondition(DelegateExecution execution) {
+        log.info("id={}, processInstanceId={}, activityInstanceId={}", execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
+        log.info("parentId={}, parentActivityInstanceId={}", execution.getParentId(), execution.getParentActivityInstanceId());
+        List<Object> results = (List<Object>) execution.getVariable(Variable.SUBPROCESS_RESULTS);
+        log.info("Current results on execution is {}", execution.getVariable(Variable.SUBPROCESS_RESULTS));
+
+        boolean foundFPC = results.stream().anyMatch(o -> "FPC".equals(o));
+        log.info("foundFPC is {}", foundFPC);
+        return foundFPC;
     }
 
     @Data

@@ -1,4 +1,7 @@
 
+## Server
+server:
+  port: 8180
 
 #
 # Camunda config

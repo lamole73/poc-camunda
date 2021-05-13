@@ -50,27 +50,27 @@
       <bpmn:incoming>Flow_0d8zc86</bpmn:incoming>
       <bpmn:outgoing>Flow_030ldjj</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:sequenceFlow id="Flow_1nl228m" sourceRef="event1_fpc" targetRef="Activity_0fua2fl" />
-    <bpmn:sequenceFlow id="Flow_0xl5jp9" sourceRef="event2_fpc" targetRef="Activity_0fua2fl" />
-    <bpmn:boundaryEvent id="event1_fpc" attachedToRef="Activity_19pszfd">
+    <bpmn:sequenceFlow id="Flow_1nl228m" name="BREAK" sourceRef="event1_break" targetRef="Activity_0fua2fl" />
+    <bpmn:sequenceFlow id="Flow_0xl5jp9" name="BREAK" sourceRef="event2_break" targetRef="Activity_0fua2fl" />
+    <bpmn:boundaryEvent id="event1_break" attachedToRef="Activity_19pszfd">
       <bpmn:outgoing>Flow_1nl228m</bpmn:outgoing>
       <bpmn:escalationEventDefinition id="EscalationEventDefinition_0q2vpfu" escalationRef="Escalation_03twdk4" />
     </bpmn:boundaryEvent>
-    <bpmn:boundaryEvent id="event2_fpc" attachedToRef="Activity_0y04w9r">
+    <bpmn:boundaryEvent id="event2_break" attachedToRef="Activity_0y04w9r">
       <bpmn:outgoing>Flow_0xl5jp9</bpmn:outgoing>
       <bpmn:escalationEventDefinition id="EscalationEventDefinition_1xo10vy" escalationRef="Escalation_03twdk4" />
     </bpmn:boundaryEvent>
-    <bpmn:endEvent id="end_FPC" name="end FPC">
+    <bpmn:endEvent id="end_BREAK" name="end BREAK">
       <bpmn:incoming>Flow_17bqtjq</bpmn:incoming>
       <bpmn:terminateEventDefinition id="TerminateEventDefinition_0wq97xh" />
     </bpmn:endEvent>
-    <bpmn:scriptTask id="Activity_0fua2fl" name="set AGGREGATE_RESULT &#34;FPC&#34;" scriptFormat="javascript" camunda:resultVariable="AGGREGATE_RESULT">
+    <bpmn:scriptTask id="Activity_0fua2fl" name="set AGGREGATE_RESULT &#34;BREAK&#34;" scriptFormat="javascript" camunda:resultVariable="AGGREGATE_RESULT">
       <bpmn:incoming>Flow_1nl228m</bpmn:incoming>
       <bpmn:incoming>Flow_0xl5jp9</bpmn:incoming>
       <bpmn:outgoing>Flow_17bqtjq</bpmn:outgoing>
-      <bpmn:script>"FPC"</bpmn:script>
+      <bpmn:script>"BREAK"</bpmn:script>
     </bpmn:scriptTask>
-    <bpmn:sequenceFlow id="Flow_17bqtjq" sourceRef="Activity_0fua2fl" targetRef="end_FPC" />
+    <bpmn:sequenceFlow id="Flow_17bqtjq" sourceRef="Activity_0fua2fl" targetRef="end_BREAK" />
     <bpmn:scriptTask id="Activity_117khth" name="set AGGREGATE_RESULT &#34;OK&#34;" scriptFormat="javascript" camunda:resultVariable="AGGREGATE_RESULT">
       <bpmn:incoming>Flow_194op9q</bpmn:incoming>
       <bpmn:outgoing>Flow_0l81y8h</bpmn:outgoing>
@@ -85,22 +85,30 @@
     <bpmn:sequenceFlow id="Flow_030ldjj" sourceRef="Gateway_1r9paxe" targetRef="Activity_0gc562f" />
     <bpmn:textAnnotation id="TextAnnotation_0ixhcft">
       <bpmn:text>Output params:
-AGGREGATE_RESULT "OK" or "FPC"</bpmn:text>
+AGGREGATE_RESULT "OK" or "BREAK"</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_0q6hse0" sourceRef="Event_16zbvlu" targetRef="TextAnnotation_0ixhcft" />
     <bpmn:textAnnotation id="TextAnnotation_12a7mck">
       <bpmn:text>This process does not use or need results as it is using the 'escalation' boundary events to stop all the multiinstance sub processes.
 
-In addition when one of the escalation for FPC is received from one of the subprocess instances it goes to 'Terminate' End event which kill the whole process and as such the other group of multiinstance sub processes</bpmn:text>
+In addition when one of the escalation for BREAK is received from one of the subprocess instances it goes to 'Terminate' End event which kill the whole process and as such the other group of multiinstance sub processes</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1l19jn7" sourceRef="StartEvent_1" targetRef="TextAnnotation_12a7mck" />
-    <bpmn:association id="Association_1w53hlr" sourceRef="end_FPC" targetRef="TextAnnotation_0ixhcft" />
+    <bpmn:association id="Association_1w53hlr" sourceRef="end_BREAK" targetRef="TextAnnotation_0ixhcft" />
   </bpmn:process>
   <bpmn:message id="Message_0yyuxt8" />
-  <bpmn:message id="Message_07hwznw" name="event_FPC" />
-  <bpmn:escalation id="Escalation_03twdk4" name="esc_fpc_name" escalationCode="esc_fpc" />
+  <bpmn:message id="Message_07hwznw" />
+  <bpmn:escalation id="Escalation_03twdk4" name="esc_break_name" escalationCode="esc_break" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="main2">
+      <bpmndi:BPMNEdge id="Flow_030ldjj_di" bpmnElement="Flow_030ldjj">
+        <di:waypoint x="955" y="410" />
+        <di:waypoint x="1010" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_194op9q_di" bpmnElement="Flow_194op9q">
+        <di:waypoint x="1110" y="410" />
+        <di:waypoint x="1170" y="410" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0l81y8h_di" bpmnElement="Flow_0l81y8h">
         <di:waypoint x="1270" y="410" />
         <di:waypoint x="1312" y="410" />
@@ -113,11 +121,17 @@ In addition when one of the escalation for FPC is received from one of the subpr
         <di:waypoint x="798" y="490" />
         <di:waypoint x="880" y="490" />
         <di:waypoint x="880" y="250" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="821" y="472" width="38" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1nl228m_di" bpmnElement="Flow_1nl228m">
         <di:waypoint x="780" y="232" />
         <di:waypoint x="780" y="210" />
         <di:waypoint x="830" y="210" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="761" y="183" width="38" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0319006_di" bpmnElement="Flow_0319006">
         <di:waypoint x="540" y="540" />
@@ -151,16 +165,14 @@ In addition when one of the escalation for FPC is received from one of the subpr
         <di:waypoint x="930" y="290" />
         <di:waypoint x="930" y="385" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_194op9q_di" bpmnElement="Flow_194op9q">
-        <di:waypoint x="1110" y="410" />
-        <di:waypoint x="1170" y="410" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_030ldjj_di" bpmnElement="Flow_030ldjj">
-        <di:waypoint x="955" y="410" />
-        <di:waypoint x="1010" y="410" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="212" y="402" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_16zbvlu_di" bpmnElement="Event_16zbvlu">
+        <dc:Bounds x="1312" y="392" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1322" y="435" width="17" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0y536hu_di" bpmnElement="Activity_1uv7oqa">
         <dc:Bounds x="440" y="250" width="100" height="80" />
@@ -180,26 +192,14 @@ In addition when one of the escalation for FPC is received from one of the subpr
       <bpmndi:BPMNShape id="Gateway_1bce5tm_di" bpmnElement="Gateway_1r9paxe">
         <dc:Bounds x="905" y="385" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0yq6olp_di" bpmnElement="end_FPC">
+      <bpmndi:BPMNShape id="Event_0yq6olp_di" bpmnElement="end_BREAK">
         <dc:Bounds x="1052" y="192" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1048" y="238" width="44" height="14" />
+          <dc:Bounds x="1040" y="238" width="60" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1xj2qbo_di" bpmnElement="Activity_0fua2fl">
         <dc:Bounds x="830" y="170" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_0ixhcft_di" bpmnElement="TextAnnotation_0ixhcft">
-        <dc:Bounds x="1170" y="140" width="160" height="53" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_12a7mck_di" bpmnElement="TextAnnotation_12a7mck">
-        <dc:Bounds x="160" y="80" width="340" height="125" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_16zbvlu_di" bpmnElement="Event_16zbvlu">
-        <dc:Bounds x="1312" y="392" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1322" y="435" width="17" height="14" />
-        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_117khth_di" bpmnElement="Activity_117khth">
         <dc:Bounds x="1170" y="370" width="100" height="80" />
@@ -207,16 +207,22 @@ In addition when one of the escalation for FPC is received from one of the subpr
       <bpmndi:BPMNShape id="Activity_0gc562f_di" bpmnElement="Activity_0gc562f">
         <dc:Bounds x="1010" y="370" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0ixhcft_di" bpmnElement="TextAnnotation_0ixhcft">
+        <dc:Bounds x="1170" y="140" width="160" height="53" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_12a7mck_di" bpmnElement="TextAnnotation_12a7mck">
+        <dc:Bounds x="160" y="80" width="340" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0tuf14u_di" bpmnElement="event2_break">
+        <dc:Bounds x="762" y="472" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_11qejgh_di" bpmnElement="event1_break">
+        <dc:Bounds x="762" y="232" width="36" height="36" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_0q6hse0_di" bpmnElement="Association_0q6hse0">
         <di:waypoint x="1323" y="394" />
         <di:waypoint x="1232" y="193" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_0tuf14u_di" bpmnElement="event2_fpc">
-        <dc:Bounds x="762" y="472" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_11qejgh_di" bpmnElement="event1_fpc">
-        <dc:Bounds x="762" y="232" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_1l19jn7_di" bpmnElement="Association_1l19jn7">
         <di:waypoint x="229" y="402" />
         <di:waypoint x="217" y="205" />

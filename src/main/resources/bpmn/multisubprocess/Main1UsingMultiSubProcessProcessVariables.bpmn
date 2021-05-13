@@ -84,7 +84,7 @@
 So we need
 1. Initialize results as process variable prior to multiinstance
 2. On every loop instance completion of each group we collect the result onto the results process variable via an 'end' process listener
-3. The completion condition looks up the resu/lts process variable for FPC in order to kill potential remaining multiinstances
+3. The completion condition looks up the resu/lts process variable for BREAK in order to kill potential remaining multiinstances
 4. We need to aggregate the results after both multiinstance groups complete.
 
 It waits for both groups of multiinstance sub processes to complete.</bpmn:text>
@@ -92,7 +92,7 @@ It waits for both groups of multiinstance sub processes to complete.</bpmn:text>
     <bpmn:association id="Association_14sd3z7" sourceRef="StartEvent_1" targetRef="TextAnnotation_1lcngao" />
     <bpmn:textAnnotation id="TextAnnotation_0gex84e">
       <bpmn:text>Output params:
-AGGREGATE_RESULT "OK" or "FPC"</bpmn:text>
+AGGREGATE_RESULT "OK" or "BREAK"</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1k1klqo" sourceRef="Event_16zbvlu" targetRef="TextAnnotation_0gex84e" />
   </bpmn:process>
@@ -188,18 +188,18 @@ AGGREGATE_RESULT "OK" or "FPC"</bpmn:text>
         <dc:Bounds x="935" y="375" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_1lcngao_di" bpmnElement="TextAnnotation_1lcngao">
-        <dc:Bounds x="160" y="60" width="480" height="166" />
+        <dc:Bounds x="160" y="60" width="480" height="168" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_0gex84e_di" bpmnElement="TextAnnotation_0gex84e">
-        <dc:Bounds x="1290" y="270" width="165" height="60" />
+        <dc:Bounds x="1290" y="270" width="165" height="53" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_14sd3z7_di" bpmnElement="Association_14sd3z7">
         <di:waypoint x="210" y="392" />
-        <di:waypoint x="210" y="226" />
+        <di:waypoint x="210" y="228" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_1k1klqo_di" bpmnElement="Association_1k1klqo">
         <di:waypoint x="1348" y="382" />
-        <di:waypoint x="1344" y="330" />
+        <di:waypoint x="1344" y="323" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

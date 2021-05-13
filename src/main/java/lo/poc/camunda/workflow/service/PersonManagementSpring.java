@@ -8,19 +8,15 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.runtime.Execution;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service("personManagementSpring")
@@ -36,8 +32,8 @@ public class PersonManagementSpring {
      *     This is trigger by the main process prior to multiinstance subprocess
      * </pre>
      *
-     * @param execution  the execution
-     * @param group the group identifier, i.e. "1" or "2"
+     * @param execution the execution
+     * @param group     the group identifier, i.e. "1" or "2"
      * @return the list of persons
      */
     public List<Person> calculatePersons(DelegateExecution execution, String group) {
@@ -55,9 +51,9 @@ public class PersonManagementSpring {
      *     This is trigger by the main process prior to multiinstance subprocess
      * </pre>
      *
-     * @param execution  the execution
-     * @param persons    the list of persons so that we initialize the relevant list of results
-     * @param group the group identifier, i.e. "1" or "2"
+     * @param execution the execution
+     * @param persons   the list of persons so that we initialize the relevant list of results
+     * @param group     the group identifier, i.e. "1" or "2"
      */
     public void initializeResults(DelegateExecution execution, List<Person> persons, String group) {
         List<String> results = persons.stream().map(s -> "").collect(Collectors.toList());
@@ -76,8 +72,8 @@ public class PersonManagementSpring {
      *     This is triggered by the "end" listener of the multiinstance subprocess
      * </pre>
      *
-     * @param execution  the execution
-     * @param group the group identifier, i.e. "1" or "2"
+     * @param execution the execution
+     * @param group     the group identifier, i.e. "1" or "2"
      */
     public void collectResults(DelegateExecution execution, String group) {
         log.info("Group {}: Debuging... id={}, processInstanceId={}, activityInstanceId={}", group, execution.getId(), execution.getProcessInstanceId(), execution.getActivityInstanceId());
@@ -103,8 +99,8 @@ public class PersonManagementSpring {
      *     This is triggered by the "end" listener of the multiinstance subprocess
      * </pre>
      *
-     * @param execution  the execution
-     * @param group the group identifier, i.e. "1" or "2"
+     * @param execution the execution
+     * @param group     the group identifier, i.e. "1" or "2"
      */
     public boolean completionCondition(DelegateExecution execution, String group) {
         // We disregard group, both should complete
@@ -118,9 +114,9 @@ public class PersonManagementSpring {
         List<String> results = resVariable.get(group);
         log.info("Group {}: Flattened all results is {}", group, results);
 
-        boolean foundFPC = results.stream().anyMatch(o -> "FPC".equals(o));
-        log.info("Group {}: foundFPC is {}", group, foundFPC);
-        return foundFPC;
+        boolean foundBREAK = results.stream().anyMatch(o -> "BREAK".equals(o));
+        log.info("Group {}: foundBREAK is {}", group, foundBREAK);
+        return foundBREAK;
     }
 
     /**
@@ -140,7 +136,7 @@ public class PersonManagementSpring {
         List<String> allResults = resVariable.entrySet().stream().flatMap(e -> e.getValue().stream()).collect(Collectors.toList());
         log.info("Flattened final results is {}", allResults);
 
-        String aggregate = allResults.stream().filter(o -> "FPC".equals(o)).findAny().orElse("OK");
+        String aggregate = allResults.stream().filter(o -> "BREAK".equals(o)).findAny().orElse("OK");
         log.info("Final Aggregate is {}", aggregate);
         return aggregate;
     }

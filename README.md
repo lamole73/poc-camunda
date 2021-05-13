@@ -32,17 +32,17 @@ This process uses and need results as it is using the 'completion condition' to 
 So we need
 1. Initialize results as process variable prior to multiinstance
 2. On every loop instance completion of each group we collect the result onto the results process variable via an 'end' process listener
-3. The completion condition looks up the resu/lts process variable for FPC in order to kill potential remaining multiinstances
+3. The completion condition looks up the results process variable for BREAK in order to kill potential remaining multiinstances
 4. We need to aggregate the results after both multiinstance groups complete.
 
 It waits for both groups of multiinstance sub processes to complete.
 
 ### Main2UsingMultiSubProcessEscalation.bpmn
-On this sample we only care about the fact that at least 1 instance completes with FPC, as such we do not store anything.
+On this sample we only care about the fact that at least 1 instance completes with BREAK, as such we do not store anything.
 We just use the 'escalation' boundary events to stop all the multiinstance sub processes and gather the fact that one instance
-finished with FPC.
-Finally, on aggregation of the results we statically define whether the result of the process is "OK" or "FPC" depending on
+finished with BREAK.
+Finally, on aggregation of the results we statically define whether the result of the process is "OK" or "BREAK" depending on
 whether the 'escalation' was triggers.
 
-In addition when one of the escalation for FPC is received from one of the subprocess instances it goes 
+In addition when one of the escalation for BREAK is received from one of the subprocess instances it goes 
 to 'Terminate' End event which kill the whole process and as such the other group of multiinstance sub processes

@@ -23,7 +23,7 @@ The result of each subprocess is being returned to the main process for further 
 
 There are currently 2 implementations depending on the number of results of each multiinstance subprocess group.
 
-### Main1UsingMultiSubProcess.bpmn
+### Main1UsingMultiSubProcessProcessVariables.bpmn
 On this sample we need ALL the results of all instances, as such we store them as a process variable and collect them
 one by one as each instance is finished.
 Finally, we aggregate the results (from the process variable) to a single result which is returned by this process.
@@ -37,7 +37,7 @@ So we need
 
 It waits for both groups of multiinstance sub processes to complete.
 
-### Main2UsingMultiSubProcessNoVariables.bpmn
+### Main2UsingMultiSubProcessEscalation.bpmn
 On this sample we only care about the fact that at least 1 instance completes with FPC, as such we do not store anything.
 We just use the 'escalation' boundary events to stop all the multiinstance sub processes and gather the fact that one instance
 finished with FPC.
